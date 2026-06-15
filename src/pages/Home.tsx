@@ -172,15 +172,17 @@ export default function Home() {
         onStart={handleTribulationStart}
       />
 
-      <TribulationResultModal
-        isOpen={!!resultData}
-        onClose={handleBackHome}
-        session={resultData?.session!}
-        rewardMerit={resultData?.merit || 0}
-        fragments={resultData?.fragments || []}
-        onRetry={handleRetry}
-        onBackHome={handleBackHome}
-      />
+      {resultData && (
+        <TribulationResultModal
+          isOpen={!!resultData}
+          onClose={handleBackHome}
+          session={resultData.session}
+          rewardMerit={resultData.merit}
+          fragments={resultData.fragments}
+          onRetry={handleRetry}
+          onBackHome={handleBackHome}
+        />
+      )}
     </div>
   );
 }

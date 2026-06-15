@@ -32,6 +32,8 @@ export function TribulationResultModal({
   const [showDetails, setShowDetails] = useState(false);
   const [rankAnimating, setRankAnimating] = useState(false);
 
+  if (!session) return null;
+
   const difficultyCfg = getDifficultyById(session.difficulty)!;
   const gradeColor = GRADE_COLORS[session.grade];
   const motto = TRIBULATION_MOTTOS[user.avatarSeed % TRIBULATION_MOTTOS.length];
