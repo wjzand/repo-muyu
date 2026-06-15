@@ -18,6 +18,7 @@ import {
   Trophy,
   Share2,
   Download,
+  Zap,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -101,8 +102,10 @@ function ToolbarButton({
 
 export function QuickToolbar({
   onOpenPoster,
+  onOpenTribulation,
 }: {
   onOpenPoster?: () => void;
+  onOpenTribulation?: () => void;
 }) {
   const [skinOpen, setSkinOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -202,6 +205,13 @@ export function QuickToolbar({
                 label="排行"
                 color="gold"
                 asLink="/leaderboard"
+              />
+
+              <ToolbarButton
+                icon={<Zap size={20} />}
+                label="渡劫"
+                color="gold"
+                onClick={onOpenTribulation}
               />
 
               <ToolbarButton

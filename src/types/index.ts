@@ -96,3 +96,104 @@ export interface Ripple {
   x: number;
   y: number;
 }
+
+export type TribulationDifficulty = 'easy' | 'medium' | 'hard';
+
+export type TribulationStatus = 'idle' | 'preparing' | 'playing' | 'result';
+
+export type HeartDemonType = 'barrage' | 'offset' | 'reverse' | 'sound' | 'imp' | 'shield';
+
+export type TribulationRank = 'qi' | 'zhuji' | 'jindan' | 'yuanying' | 'huashen' | 'xianzun';
+
+export interface TribulationDifficultyConfig {
+  id: TribulationDifficulty;
+  name: string;
+  description: string;
+  duration: number;
+  targetKnocks: number;
+  costMerit: number;
+  freeDaily: number;
+  rewardMultiplier: number;
+  demonFrequency: number;
+  color: string;
+}
+
+export interface TribulationRankConfig {
+  id: TribulationRank;
+  name: string;
+  minScore: number;
+  color: string;
+  icon: string;
+}
+
+export interface HeartDemonConfig {
+  id: HeartDemonType;
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+  tip?: string;
+}
+
+export interface ActiveHeartDemon {
+  id: string;
+  type: HeartDemonType;
+  startTime: number;
+  duration: number;
+  resolved: boolean;
+  x?: number;
+  y?: number;
+  offsetX?: number;
+  offsetY?: number;
+}
+
+export interface TribulationSession {
+  difficulty: TribulationDifficulty;
+  startTime: number;
+  endTime?: number;
+  totalKnocks: number;
+  demonsEncountered: number;
+  demonsResolved: number;
+  maxCombo: number;
+  currentCombo: number;
+  shields: number;
+  interrupts: number;
+  score: number;
+  success: boolean;
+  grade: 'S' | 'A' | 'B' | 'C' | 'D';
+}
+
+export interface TribulationRecord {
+  id: string;
+  session: TribulationSession;
+  rewardMerit: number;
+  fragments: string[];
+  timestamp: number;
+}
+
+export interface TribulationSkinFragment {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+  dropFromDifficulty: TribulationDifficulty[];
+}
+
+export interface UserTribulationData {
+  rankScore: number;
+  totalScore: number;
+  bestScore: number;
+  successCount: number;
+  failCount: number;
+  consecutiveWins: number;
+  maxConsecutiveWins: number;
+  fragments: string[];
+  records: TribulationRecord[];
+  freeDailyUsed: { date: string; count: number };
+  demonsEncountered: HeartDemonType[];
+}
+
+export type GradeColor = {
+  [key in TribulationSession['grade']]: string;
+};

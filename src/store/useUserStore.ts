@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { UserData, Settings } from '@/types';
+import { UserData, Settings, UserTribulationData, TribulationRecord } from '@/types';
 import { STORAGE_KEYS, safeGetItem, safeSetItem } from '@/utils/storage';
 import { generateCyberName, generateId } from '@/utils/generateName';
 import { getTodayDate } from '@/utils/formatNumber';
@@ -34,9 +34,24 @@ const DEFAULT_SETTINGS: Settings = {
   participateInRanking: true,
 };
 
+const DEFAULT_TRIBULATION: UserTribulationData = {
+  rankScore: 0,
+  totalScore: 0,
+  bestScore: 0,
+  successCount: 0,
+  failCount: 0,
+  consecutiveWins: 0,
+  maxConsecutiveWins: 0,
+  fragments: [],
+  records: [],
+  freeDailyUsed: { date: '', count: 0 },
+  demonsEncountered: [],
+};
+
 interface UserStore {
   user: UserData;
   settings: Settings;
+  tribulation: UserTribulationData;
   initUser: () => void;
   setCyberName: (name: string) => void;
   setAvatarSeed: (seed: number) => void;
@@ -52,17 +67,33 @@ interface UserStore {
   importData: (json: string) => boolean;
   updateSettings: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   checkSkinUnlocks: () => string[];
+  checkFreeDaily: (maxFree: number) => boolean;
+  useFreeDaily: () => void;
+  addTribulationRecord: (record: TribulationRecord, meritDelta: number, scoreDelta: number) => void;
+  addTribulationFragment: (fragmentId: string) => void;
+  addDemonEncountered: (demonId: string) => void;
 }
 
 export const useUserStore = create<UserStore>((set, get) => ({
   user: safeGetItem(STORAGE_KEYS.USER, DEFAULT_USER),
   settings: safeGetItem(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS),
+  tribulation: safeGetItem(STORAGE_KEYS.TRIBULATION, DEFAULT_TRIBULATION),
 
   initUser: () => {
-    const { user, resetDaily } = get();
+    const { user, tribulation, resetDaily } = get();
     const today = getTodayDate();
     if (user.todayDate !== today) {
       resetDaily();
+    }
+    if (tribulation.freeDailyUsed.date !== today) {
+      set((state) => {
+        const newTrib = {
+          ...state.tribulation,
+          freeDailyUsed: { date: today, count: 0 },
+        };
+        safeSetItem(STORAGE_KEYS.TRIBULATION, newTrib);
+        return { tribulation: newTrib };
+      });
     }
   },
 
@@ -204,5 +235,87 @@ export const useUserStore = create<UserStore>((set, get) => ({
     });
 
     return newlyUnlocked;
+  },
+
+  checkFreeDaily: (maxFree: number): boolean => {
+    const { tribulation } = get();
+    const today = getTodayDate();
+    if (tribulation.freeDailyUsed.date !== today) {
+      return true;
+    }
+    return tribulation.freeDailyUsed.count < maxFree;
+  },
+
+  useFreeDaily: () => {
+    set((state) => {
+      const today = getTodayDate();
+      const newTrib = {
+        ...state.tribulation,
+        freeDailyUsed: {
+          date: today,
+          count:
+            state.tribulation.freeDailyUsed.date === today
+              ? state.tribulation.freeDailyUsed.count + 1
+              : 1,
+        },
+      };
+      safeSetItem(STORAGE_KEYS.TRIBULATION, newTrib);
+      return { tribulation: newTrib };
+    });
+  },
+
+  addTribulationRecord: (record: TribulationRecord, meritDelta: number, scoreDelta: number) => {
+    set((state) => {
+      const success = record.session.success;
+      const newRecords = [record, ...state.tribulation.records].slice(0, 100);
+      const newConsecutiveWins = success ? state.tribulation.consecutiveWins + 1 : 0;
+      const newTrib = {
+        ...state.tribulation,
+        rankScore: Math.max(0, state.tribulation.rankScore + scoreDelta),
+        totalScore: state.tribulation.totalScore + Math.max(0, scoreDelta),
+        bestScore: Math.max(state.tribulation.bestScore, record.session.score),
+        successCount: state.tribulation.successCount + (success ? 1 : 0),
+        failCount: state.tribulation.failCount + (success ? 0 : 1),
+        consecutiveWins: newConsecutiveWins,
+        maxConsecutiveWins: Math.max(state.tribulation.maxConsecutiveWins, newConsecutiveWins),
+        fragments: [...state.tribulation.fragments, ...record.fragments],
+        records: newRecords,
+      };
+      safeSetItem(STORAGE_KEYS.TRIBULATION, newTrib);
+
+      const newUser = {
+        ...state.user,
+        totalMerit: Math.max(0, state.user.totalMerit + meritDelta),
+        totalKnocks: state.user.totalKnocks + record.session.totalKnocks,
+      };
+      safeSetItem(STORAGE_KEYS.USER, newUser);
+
+      return { tribulation: newTrib, user: newUser };
+    });
+  },
+
+  addTribulationFragment: (fragmentId: string) => {
+    set((state) => {
+      const newTrib = {
+        ...state.tribulation,
+        fragments: [...state.tribulation.fragments, fragmentId],
+      };
+      safeSetItem(STORAGE_KEYS.TRIBULATION, newTrib);
+      return { tribulation: newTrib };
+    });
+  },
+
+  addDemonEncountered: (demonId: string) => {
+    set((state) => {
+      if (state.tribulation.demonsEncountered.includes(demonId as any)) {
+        return {};
+      }
+      const newTrib = {
+        ...state.tribulation,
+        demonsEncountered: [...state.tribulation.demonsEncountered, demonId as any],
+      };
+      safeSetItem(STORAGE_KEYS.TRIBULATION, newTrib);
+      return { tribulation: newTrib };
+    });
   },
 }));

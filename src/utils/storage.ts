@@ -2,6 +2,7 @@ export const STORAGE_KEYS = {
   USER: 'cyber_woodenfish_user',
   SETTINGS: 'cyber_woodenfish_settings',
   CUSTOM_SCRIPTURES: 'cyber_woodenfish_custom_scriptures',
+  TRIBULATION: 'cyber_woodenfish_tribulation',
 };
 
 export function safeGetItem<T>(key: string, defaultValue: T): T {
