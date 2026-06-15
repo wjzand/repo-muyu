@@ -97,7 +97,7 @@ export function PosterGenerator({ isOpen, onClose }: PosterGeneratorProps) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="赛博修行证书" size="lg">
-      <div className="space-y-5">
+      <div className="space-y-5 pb-4">
         <div className="flex justify-center overflow-hidden rounded-xl border-2 border-cyber-border bg-cyber-bg p-2">
           <div className="w-full max-w-sm">
             <div

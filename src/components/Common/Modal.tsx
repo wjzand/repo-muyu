@@ -61,8 +61,8 @@ export function Modal({
 
   const panelPositionClasses =
     position === 'bottom'
-      ? 'rounded-t-2xl rounded-b-none max-h-[85vh] animate-[slideUp_0.3s_ease-out]'
-      : 'rounded-2xl';
+      ? 'rounded-t-2xl rounded-b-none max-h-[90vh] md:max-h-[85vh] animate-[slideUp_0.3s_ease-out]'
+      : 'rounded-2xl max-h-[90vh]';
 
   return (
     <div
@@ -102,7 +102,8 @@ export function Modal({
         <div
           className={cn(
             'overflow-y-auto scrollbar-hide',
-            title ? 'p-6' : ''
+            title ? 'p-4 md:p-6 pb-12 md:pb-16' : 'pb-12 md:pb-16',
+            position === 'bottom' ? 'max-h-[calc(90vh-70px)]' : 'max-h-[calc(90vh-70px)]'
           )}
         >
           {children}

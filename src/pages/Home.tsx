@@ -27,7 +27,7 @@ export default function Home() {
       <ScanLines />
       <NoiseOverlay />
 
-      <div className="relative z-10 flex-1 w-full flex flex-col items-center justify-start overflow-y-auto scrollbar-hide pb-40">
+      <div className="relative z-10 flex-1 w-full flex flex-col items-center justify-start overflow-y-auto scrollbar-hide pb-[140px] sm:pb-40">
         <div className="w-full pt-4 md:pt-6 px-4">
           <div className="max-w-md mx-auto text-center mb-4">
             <GlitchText

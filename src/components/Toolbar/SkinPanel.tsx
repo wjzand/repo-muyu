@@ -39,7 +39,7 @@ export function SkinPanel({ isOpen, onClose }: SkinPanelProps) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="木鱼皮肤" size="xl" position="bottom">
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pb-4">
         {SKINS.map((skin) => {
           const unlocked = isSkinUnlocked(skin, user.totalMerit, user.unlockedSkins);
           const isActive = user.currentSkin === skin.id;

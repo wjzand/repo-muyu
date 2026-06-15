@@ -61,10 +61,10 @@ function ToolbarButton({
   const isActive = active || isActiveRoute;
 
   const classes = cn(
-    'relative flex flex-col items-center justify-center gap-1',
-    'w-14 h-16 rounded-xl border border-transparent',
+    'relative flex flex-col items-center justify-center gap-0.5',
+    'w-12 h-14 sm:w-14 sm:h-16 rounded-xl border border-transparent',
     'text-gray-400 transition-all duration-200',
-    'active:scale-95',
+    'active:scale-95 flex-shrink-0',
     isActive ? activeColorClasses[color] : colorClasses[color]
   );
 
@@ -78,7 +78,7 @@ function ToolbarButton({
           </span>
         )}
       </div>
-      <span className="text-[10px] font-orbitron tracking-wider whitespace-nowrap">
+      <span className="text-[9px] sm:text-[10px] font-orbitron tracking-wider whitespace-nowrap">
         {label}
       </span>
     </>
@@ -156,19 +156,19 @@ export function QuickToolbar({
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-4 pt-2 bg-gradient-to-t from-cyber-bg via-cyber-bg/90 to-transparent">
+      <div className="fixed bottom-0 left-0 right-0 z-40 px-3 sm:px-4 pb-[max(16px,env(safe-area-inset-bottom))] pt-2 bg-gradient-to-t from-cyber-bg via-cyber-bg/90 to-transparent">
         <div className="max-w-lg mx-auto">
-          <div className="bg-cyber-panel/80 backdrop-blur-md rounded-2xl border border-cyber-border p-2 shadow-2xl">
-            <div className="flex items-center justify-around">
+          <div className="bg-cyber-panel/80 backdrop-blur-md rounded-2xl border border-cyber-border p-2 shadow-2xl overflow-x-auto scrollbar-hide">
+            <div className="flex items-center justify-start sm:justify-around gap-1 sm:gap-0 min-w-max sm:min-w-0">
               <ToolbarButton
-                icon={<Palette size={22} />}
+                icon={<Palette size={20} />}
                 label="皮肤"
                 color="pink"
                 onClick={() => setSkinOpen(true)}
               />
 
               <ToolbarButton
-                icon={settings.soundEnabled ? <Volume2 size={22} /> : <VolumeX size={22} />}
+                icon={settings.soundEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
                 label={currentSoundCfg?.name.slice(0, 2) || '音效'}
                 color="cyan"
                 active={settings.soundEnabled}
@@ -182,7 +182,7 @@ export function QuickToolbar({
               />
 
               <ToolbarButton
-                icon={settings.scriptureEnabled ? <Scroll size={22} /> : <ScrollText size={22} />}
+                icon={settings.scriptureEnabled ? <Scroll size={20} /> : <ScrollText size={20} />}
                 label="经文"
                 color="purple"
                 active={settings.scriptureEnabled}
@@ -190,7 +190,7 @@ export function QuickToolbar({
               />
 
               <ToolbarButton
-                icon={settings.autoKnockEnabled ? <Activity size={22} /> : <ZapOff size={22} />}
+                icon={settings.autoKnockEnabled ? <Activity size={20} /> : <ZapOff size={20} />}
                 label="自动"
                 color="green"
                 active={settings.autoKnockEnabled}
@@ -198,35 +198,35 @@ export function QuickToolbar({
               />
 
               <ToolbarButton
-                icon={<Trophy size={22} />}
+                icon={<Trophy size={20} />}
                 label="排行"
                 color="gold"
                 asLink="/leaderboard"
               />
 
               <ToolbarButton
-                icon={<User size={22} />}
+                icon={<User size={20} />}
                 label="我的"
                 color="purple"
                 asLink="/profile"
               />
 
               <ToolbarButton
-                icon={<Download size={22} />}
+                icon={<Download size={20} />}
                 label="海报"
                 color="cyan"
                 onClick={onOpenPoster}
               />
 
               <ToolbarButton
-                icon={<Share2 size={22} />}
+                icon={<Share2 size={20} />}
                 label="分享"
                 color="pink"
                 onClick={handleShare}
               />
 
               <ToolbarButton
-                icon={<Settings size={22} />}
+                icon={<Settings size={20} />}
                 label="设置"
                 color="cyan"
                 onClick={() => setSettingsOpen(true)}

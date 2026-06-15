@@ -114,7 +114,7 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="设置" size="lg" position="bottom">
-      <div className="space-y-4">
+      <div className="space-y-4 pb-4">
         <div>
           <div className="text-xs font-orbitron tracking-widest text-cyber-purple uppercase mb-2 px-1">
             音效设置
